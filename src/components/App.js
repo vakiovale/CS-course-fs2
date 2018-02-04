@@ -1,32 +1,26 @@
 import React from 'react'
+import axios from 'axios'
 import Puhelinluettelo from './Puhelinluettelo'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [
-        { 
-          name: 'Arto Hellas',
-          phone: '040999999'
-        },
-        {
-          name: 'Testi Testaaja',
-          phone: '040777666'
-        },
-        {
-          name: 'Arvo Arvokas',
-          phone: '050123456'
-        },
-        {
-          name: 'Voittamaton Teräsmies',
-          phone: '123999111'
-        }
-      ],
+      persons: [],
       newName: '',
       newPhone: '',
       filter: '' 
     }
+  }
+
+  componentWillMount() {
+    console.log('will mount')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        this.setState({ persons: response.data })
+      })
   }
 
   addContact = (event) => {
@@ -34,7 +28,7 @@ class App extends React.Component {
     const name = this.state.newName
     const phone = this.state.newPhone
 
-    const newPerson = { name: name, phone: phone }
+    const newPerson = { name: name, number: phone }
     const persons = this.state.persons
 
     if(!persons.some(person => person.name === name)) {
