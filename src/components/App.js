@@ -5,18 +5,22 @@ class App extends React.Component {
     super(props)
     this.state = {
       persons: [
-        { name: 'Arto Hellas' }
+        { 
+          name: 'Arto Hellas',
+          phone: '040999999'
+        }
       ],
-      newName: ''
+      newName: '',
+      newPhone: ''
     }
   }
 
   addContact = (event) => {
     event.preventDefault()
     const name = this.state.newName
-    console.log(name)
+    const phone = this.state.newPhone
 
-    const newPerson = { name: name }
+    const newPerson = { name: name, phone: phone }
     const persons = this.state.persons
 
     if(!persons.some(person => person.name === name)) {
@@ -32,6 +36,11 @@ class App extends React.Component {
     this.setState({ newName: event.target.value })
   }
 
+  handlePhoneChange = (event) => {
+    console.log(event.target.value)
+    this.setState({ newPhone: event.target.value })
+  }
+
   render() {
     return (
       <div>
@@ -41,11 +50,14 @@ class App extends React.Component {
             nimi: <input value={this.state.newName} onChange={this.handleNameChange} />
           </div>
           <div>
+            numero: <input value={this.state.newPhone} onChange={this.handlePhoneChange} />
+          </div>
+          <div>
             <button type="submit">lisää</button>
           </div>
         </form>
         <h2>Numerot</h2>
-        {this.state.persons.map(person => <p key={person.name}>{person.name}</p>)}
+        {this.state.persons.map(person => <p key={person.name}>{person.name}: {person.phone}</p>)}
       </div>
     )
   }
