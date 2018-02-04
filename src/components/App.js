@@ -18,9 +18,13 @@ class App extends React.Component {
 
     const newPerson = { name: name }
     const persons = this.state.persons
-    persons.push(newPerson)
 
-    this.setState({ persons: persons })
+    if(!persons.some(person => person.name === name)) {
+      persons.push(newPerson)
+      this.setState({ persons: persons })
+    } else {
+      console.log('Nimi on jo luettelossa!')
+    }
   }
 
   handleNameChange = (event) => {
