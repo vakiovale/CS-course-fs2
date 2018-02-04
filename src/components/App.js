@@ -1,4 +1,5 @@
 import React from 'react'
+import Puhelinluettelo from './Puhelinluettelo'
 
 class App extends React.Component {
   constructor(props) {
@@ -8,6 +9,18 @@ class App extends React.Component {
         { 
           name: 'Arto Hellas',
           phone: '040999999'
+        },
+        {
+          name: 'Testi Testaaja',
+          phone: '040777666'
+        },
+        {
+          name: 'Arvo Arvokas',
+          phone: '050123456'
+        },
+        {
+          name: 'Voittamaton Teräsmies',
+          phone: '123999111'
         }
       ],
       newName: '',
@@ -47,38 +60,11 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h2>Puhelinluettelo</h2>
-        <form onSubmit={this.addContact}>
-          <div>
-            rajaa: <input value={this.state.filter.source} onChange={this.handleFilterChange} />
-          </div>
-          <div>
-            <h3>Lisää uusi</h3>
-          </div>
-          <div>
-            nimi: <input value={this.state.newName} onChange={this.handleNameChange} />
-          </div>
-          <div>
-            numero: <input value={this.state.newPhone} onChange={this.handlePhoneChange} />
-          </div>
-          <div>
-            <button type="submit">lisää</button>
-          </div>
-        </form>
-        <h2>Numerot</h2>
-        <table>
-          <tbody>
-            {this.state.persons
-            .filter(person => 
-              person.name.match(new RegExp(this.state.filter, "i")) !== null)
-            .map(person => 
-              <tr key={person.name}>
-                <td>{person.name}</td>
-                <td>{person.phone}</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+        <Puhelinluettelo persons={this.state.persons}
+         filter={this.state.filter} handleFilterChange={this.handleFilterChange} 
+         addContact={this.addContact} newName={this.state.newName} 
+         handleNameChange={this.handleNameChange} newPhone={this.state.newPhone} 
+         handlePhoneChange={this.handlePhoneChange} />
       </div>
     )
   }
