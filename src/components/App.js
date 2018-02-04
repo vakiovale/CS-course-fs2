@@ -57,7 +57,16 @@ class App extends React.Component {
           </div>
         </form>
         <h2>Numerot</h2>
-        {this.state.persons.map(person => <p key={person.name}>{person.name}: {person.phone}</p>)}
+        <table>
+          <tbody>
+            {this.state.persons.map(person => 
+              <tr key={person.name}>
+                <td>{person.name}</td>
+                <td>{person.phone}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     )
   }
