@@ -33,6 +33,10 @@ class App extends React.Component {
 
     if(!persons.some(person => person.name === name)) {
       persons.push(newPerson)
+      axios.post('http://localhost:3001/persons', newPerson)
+       .then(response => {
+         console.log(response)
+       })
       this.setState({ persons: persons })
     } else {
       console.log('Nimi on jo luettelossa!')
