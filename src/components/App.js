@@ -11,7 +11,8 @@ class App extends React.Component {
         }
       ],
       newName: '',
-      newPhone: ''
+      newPhone: '',
+      filter: '' 
     }
   }
 
@@ -32,13 +33,15 @@ class App extends React.Component {
   }
 
   handleNameChange = (event) => {
-    console.log(event.target.value)
     this.setState({ newName: event.target.value })
   }
 
   handlePhoneChange = (event) => {
-    console.log(event.target.value)
     this.setState({ newPhone: event.target.value })
+  }
+
+  handleFilterChange = (event) => {
+    this.setState({ filter: event.target.value })
   }
 
   render() {
@@ -46,6 +49,12 @@ class App extends React.Component {
       <div>
         <h2>Puhelinluettelo</h2>
         <form onSubmit={this.addContact}>
+          <div>
+            rajaa: <input value={this.state.filter.source} onChange={this.handleFilterChange} />
+          </div>
+          <div>
+            <h3>Lisää uusi</h3>
+          </div>
           <div>
             nimi: <input value={this.state.newName} onChange={this.handleNameChange} />
           </div>
@@ -59,7 +68,10 @@ class App extends React.Component {
         <h2>Numerot</h2>
         <table>
           <tbody>
-            {this.state.persons.map(person => 
+            {this.state.persons
+            .filter(person => 
+              person.name.match(new RegExp(this.state.filter, "i")) !== null)
+            .map(person => 
               <tr key={person.name}>
                 <td>{person.name}</td>
                 <td>{person.phone}</td>
