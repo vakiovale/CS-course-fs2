@@ -1,5 +1,6 @@
 import React from 'react'
 import Puhelinluettelo from './Puhelinluettelo'
+import Ilmoitus from './Ilmoitus'
 import personService from '../services/persons'
 
 class App extends React.Component {
@@ -9,7 +10,8 @@ class App extends React.Component {
       persons: [],
       newName: '',
       newPhone: '',
-      filter: '' 
+      filter: '',
+      message: null 
     }
   }
 
@@ -27,6 +29,15 @@ class App extends React.Component {
     this.refresh()
   }
 
+  addNotification(notification) {
+    this.setState({
+      message: notification
+    })
+    setTimeout(() => {
+      this.setState({ message: null })
+    }, 5000)
+  }
+
   addContact = (event) => {
     event.preventDefault()
     const name = this.state.newName
@@ -41,6 +52,7 @@ class App extends React.Component {
         .create(newPerson)  
         .then(response => {
           console.log(response)
+          this.addNotification('Uusi yhteystieto lisätty!')
           this.refresh()
         })
       this.setState({ persons: persons })
@@ -51,6 +63,7 @@ class App extends React.Component {
         .update(person.id, newPerson)
         .then(response => {
           console.log(response)
+          this.addNotification('Puhelinnumero päivitetty!')
           this.refresh()
         })
     }
@@ -62,6 +75,7 @@ class App extends React.Component {
         .remove(id)
         .then(response => {
           console.log(response)
+          this.addNotification('Puhelinnumero poistettu!')
           this.refresh()
         })
     }
@@ -82,6 +96,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        <Ilmoitus viesti={this.state.message} />
         <Puhelinluettelo persons={this.state.persons}
          filter={this.state.filter} handleFilterChange={this.handleFilterChange} 
          addContact={this.addContact} newName={this.state.newName} 
