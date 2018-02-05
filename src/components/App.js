@@ -38,6 +38,16 @@ class App extends React.Component {
     }, 5000)
   }
 
+  addNewContact = (person) => {
+    personService
+      .create(person)  
+      .then(response => {
+        console.log(response)
+        this.addNotification('Uusi yhteystieto lisätty!')
+        this.refresh()
+      })
+  }
+
   addContact = (event) => {
     event.preventDefault()
     const name = this.state.newName
@@ -48,14 +58,7 @@ class App extends React.Component {
 
     if(!persons.some(person => person.name === name)) {
       console.log('Adding new contact')
-      personService
-        .create(newPerson)  
-        .then(response => {
-          console.log(response)
-          this.addNotification('Uusi yhteystieto lisätty!')
-          this.refresh()
-        })
-      this.setState({ persons: persons })
+      this.addNewContact(newPerson);
     } else {
       console.log('Update phone number')
       const person = persons.find(person => person.name === name)
@@ -65,6 +68,10 @@ class App extends React.Component {
           console.log(response)
           this.addNotification('Puhelinnumero päivitetty!')
           this.refresh()
+        })
+        .catch(error => {
+          console.log('Contact cannot be found - adding instead')
+          this.addNewContact(person)
         })
     }
   }
