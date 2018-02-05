@@ -1,15 +1,15 @@
 body {
-  margin: 0;
+  margin: 1em;
   padding: 0;
   font-family: sans-serif;
 }
 
-.ilmoitus {
-  color: #333;
-  padding: 1em;
-  font-size: 1.2em;
-  font-weight: 600;
-  background-color: #5294e2;
-  border-radius: 0.2em;
-  margin: 0.5em;
+img {
+  width: 200px;
+}
+
+li:hover {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
 }

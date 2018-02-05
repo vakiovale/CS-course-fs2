@@ -1,26 +1,38 @@
 import React from 'react'
-import Puhelinluettelo from './Puhelinluettelo'
-import Ilmoitus from './Ilmoitus'
-import personService from '../services/persons'
+import countryService from '../services/countries'
+
+const Country = ({ country }) => {
+  if(country === null) {
+    return null
+  }
+  return (
+    <div> 
+      <h1>{country.name}</h1>
+      <p>capital: {country.capital}</p>
+      <p>population: {country.population}</p>
+      <p>
+        <img src={country.flag} />
+      </p>
+    </div>
+  )
+}
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [],
-      newName: '',
-      newPhone: '',
+      countries: [],
+      activeCountry: null,
       filter: '',
-      message: null 
     }
   }
 
   refresh() {
-    personService
+    countryService
       .getAll()
       .then(response => {
-        console.log('promise fulfilled')
-        this.setState({ persons: response.data })
+        console.log(response.data)
+        this.setState({ countries: response.data })
       })
   }
 
@@ -29,86 +41,33 @@ class App extends React.Component {
     this.refresh()
   }
 
-  addNotification(notification) {
-    this.setState({
-      message: notification
-    })
-    setTimeout(() => {
-      this.setState({ message: null })
-    }, 5000)
-  }
-
-  addNewContact = (person) => {
-    personService
-      .create(person)  
-      .then(response => {
-        console.log(response)
-        this.addNotification('Uusi yhteystieto lisätty!')
-        this.refresh()
-      })
-  }
-
-  addContact = (event) => {
-    event.preventDefault()
-    const name = this.state.newName
-    const phone = this.state.newPhone
-
-    const newPerson = { name: name, number: phone }
-    const persons = this.state.persons
-
-    if(!persons.some(person => person.name === name)) {
-      console.log('Adding new contact')
-      this.addNewContact(newPerson);
-    } else {
-      console.log('Update phone number')
-      const person = persons.find(person => person.name === name)
-      personService
-        .update(person.id, newPerson)
-        .then(response => {
-          console.log(response)
-          this.addNotification('Puhelinnumero päivitetty!')
-          this.refresh()
-        })
-        .catch(error => {
-          console.log('Contact cannot be found - adding instead')
-          this.addNewContact(person)
-        })
-    }
-  }
-
-  deleteHandler = (id) => {
-    return () => {
-      personService
-        .remove(id)
-        .then(response => {
-          console.log(response)
-          this.addNotification('Puhelinnumero poistettu!')
-          this.refresh()
-        })
-    }
-  }
-
-  handleNameChange = (event) => {
-    this.setState({ newName: event.target.value })
-  }
-
-  handlePhoneChange = (event) => {
-    this.setState({ newPhone: event.target.value })
+  showCountry = (country) => {
+    console.log(country)
+    this.setState({ activeCountry: country })
   }
 
   handleFilterChange = (event) => {
     this.setState({ filter: event.target.value })
+    this.setState({ activeCountry: null })
   }
 
   render() {
     return (
       <div>
-        <Ilmoitus viesti={this.state.message} />
-        <Puhelinluettelo persons={this.state.persons}
-         filter={this.state.filter} handleFilterChange={this.handleFilterChange} 
-         addContact={this.addContact} newName={this.state.newName} 
-         handleNameChange={this.handleNameChange} newPhone={this.state.newPhone} 
-         handlePhoneChange={this.handlePhoneChange} deleteHandler={this.deleteHandler} />
+        <div>
+          find country: <input value={this.state.filter} onChange={this.handleFilterChange} />
+        </div>
+        <Country country={this.state.activeCountry} />
+        <div>
+          <ul>
+            {this.state.countries
+              .filter(country => 
+                country.name.match(new RegExp(this.state.filter, "i")) !== null)
+              .map(country => 
+                <li key={country.numericCode} onClick={() => this.showCountry(country)}>{country.name}</li>
+            )}
+          </ul>
+        </div>
       </div>
     )
   }
