@@ -1,6 +1,6 @@
 import React from 'react'
-import axios from 'axios'
 import Puhelinluettelo from './Puhelinluettelo'
+import personService from '../services/persons'
 
 class App extends React.Component {
   constructor(props) {
@@ -15,8 +15,8 @@ class App extends React.Component {
 
   componentWillMount() {
     console.log('will mount')
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
         console.log('promise fulfilled')
         this.setState({ persons: response.data })
@@ -33,10 +33,11 @@ class App extends React.Component {
 
     if(!persons.some(person => person.name === name)) {
       persons.push(newPerson)
-      axios.post('http://localhost:3001/persons', newPerson)
-       .then(response => {
-         console.log(response)
-       })
+      personService
+        .create(newPerson)  
+        .then(response => {
+          console.log(response)
+        })
       this.setState({ persons: persons })
     } else {
       console.log('Nimi on jo luettelossa!')
