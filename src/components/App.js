@@ -36,6 +36,7 @@ class App extends React.Component {
     const persons = this.state.persons
 
     if(!persons.some(person => person.name === name)) {
+      console.log('Adding new contact')
       personService
         .create(newPerson)  
         .then(response => {
@@ -44,7 +45,14 @@ class App extends React.Component {
         })
       this.setState({ persons: persons })
     } else {
-      console.log('Nimi on jo luettelossa!')
+      console.log('Update phone number')
+      const person = persons.find(person => person.name === name)
+      personService
+        .update(person.id, newPerson)
+        .then(response => {
+          console.log(response)
+          this.refresh()
+        })
     }
   }
 
