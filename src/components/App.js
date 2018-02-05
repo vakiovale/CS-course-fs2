@@ -13,14 +13,18 @@ class App extends React.Component {
     }
   }
 
-  componentWillMount() {
-    console.log('will mount')
+  refresh() {
     personService
       .getAll()
       .then(response => {
         console.log('promise fulfilled')
         this.setState({ persons: response.data })
       })
+  }
+
+  componentWillMount() {
+    console.log('will mount')
+    this.refresh()
   }
 
   addContact = (event) => {
@@ -32,15 +36,26 @@ class App extends React.Component {
     const persons = this.state.persons
 
     if(!persons.some(person => person.name === name)) {
-      persons.push(newPerson)
       personService
         .create(newPerson)  
         .then(response => {
           console.log(response)
+          this.refresh()
         })
       this.setState({ persons: persons })
     } else {
       console.log('Nimi on jo luettelossa!')
+    }
+  }
+
+  deleteHandler = (id) => {
+    return () => {
+      personService
+        .remove(id)
+        .then(response => {
+          console.log(response)
+          this.refresh()
+        })
     }
   }
 
@@ -63,7 +78,7 @@ class App extends React.Component {
          filter={this.state.filter} handleFilterChange={this.handleFilterChange} 
          addContact={this.addContact} newName={this.state.newName} 
          handleNameChange={this.handleNameChange} newPhone={this.state.newPhone} 
-         handlePhoneChange={this.handlePhoneChange} />
+         handlePhoneChange={this.handlePhoneChange} deleteHandler={this.deleteHandler} />
       </div>
     )
   }

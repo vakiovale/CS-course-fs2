@@ -4,7 +4,8 @@ import PuhelinluetteloLista from './PuhelinluetteloLista'
 
 const Puhelinluettelo = ({ persons, filter, 
   handleFilterChange, addContact, newName,
-  handleNameChange, newPhone, handlePhoneChange }) => {
+  handleNameChange, newPhone, handlePhoneChange,
+  deleteHandler }) => {
 
   return (
     <div>
@@ -15,7 +16,7 @@ const Puhelinluettelo = ({ persons, filter,
       <NumeroLomake addContact={addContact} newName={newName} 
        handleNameChange={handleNameChange} newPhone={newPhone}
        handlePhoneChange={handlePhoneChange} />
-      <PuhelinluetteloLista persons={persons} filter={filter} />
+      <PuhelinluetteloLista persons={persons} filter={filter} deleteHandler={deleteHandler} />
     </div>
   )
 }
